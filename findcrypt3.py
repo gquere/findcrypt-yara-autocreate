@@ -207,6 +207,15 @@ class Findcrypt_Plugin_t(idaapi.plugin_t):
                              + "_"
                              + hex(self.toVirtualAddress(instance.offset, offsets)).lstrip("0x").rstrip("L").upper()
                              , 0)
+                    if string.identifier.endswith('_FULL'):
+                        if '_INT_' in string.identifier:
+                            var_type = idaapi.FF_DWORD
+                        else:
+                            var_type = idaapi.FF_BYTE
+                        try:
+                            ida_bytes.create_data(self.toVirtualAddress(instance.offset, offsets), var_type, instance.matched_length, idaapi.BADADDR)
+                        except Exception as e:
+                            print(e)
                     values.append(value)
         print("<<< end yara search")
         return values
